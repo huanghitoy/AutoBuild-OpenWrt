@@ -1,7 +1,7 @@
 #!/bin/bash
 #=================================================
 # Description: DIY script
-# Lisence: MIT
+# Lisencehttps://github.com/huanghitoy/AutoBuild-OpenWrt/blob/master/customize.sh: MIT
 # Author: eSirPlayground
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
@@ -12,4 +12,4 @@ sed -i 's/192.168.1.1/192.168.12.199/g' openwrt/package/base-files/files/bin/con
 sed -i 's/$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.//g' openwrt/package/lean/default-settings/files/zzz-default-settings
 
 #3. Replace with JerryKuKu’s Argon
-#rm openwrt/package/lean/luci-theme-argon -rf
+rm openwrt/package/lean/luci-theme-argon -rf
