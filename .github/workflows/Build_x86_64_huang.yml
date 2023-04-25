@@ -58,7 +58,7 @@ jobs:
         echo 'src-git kenzok8 https://github.com/kenzok8/openwrt-packages.git;master' >> ./feeds.conf.default
         echo 'src-git small https://github.com/kenzok8/small.git;master' >> ./feeds.conf.default
         sed -i 's/feed\/telephony.git/huanghitoy\/telephony.git;master/g' ./feeds.conf.default
-	sed -i 's/^#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
+	sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
 	
     - name: Update & Install feeds
       working-directory: ./openwrt
