@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_x86_64_huang
+name: r7800
 
 # Add a button to trigger the workflow
 on: 
@@ -50,35 +50,45 @@ jobs:
         sudo -E apt-get clean
     - name: Clone source code
       env: 
-        REPO_URL: https://github.com/coolsnowwolf/lede
-        REPO_BRANCH: master
+        REPO_URL: https://github.com/Lienol/openwrt
+        REPO_BRANCH: 22.03
       run: |
-        git clone  $REPO_URL openwrt
+        git clone  -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         cd openwrt
-        echo 'src-git kenzok8 https://github.com/kenzok8/openwrt-packages.git;master' >> ./feeds.conf.default
-        echo 'src-git small https://github.com/kenzok8/small.git;master' >> ./feeds.conf.default
-        sed -i 's/feed\/telephony.git/huanghitoy\/telephony.git;master/g' ./feeds.conf.default
-        sed -i 's/^#src-git helloworld/src-git helloworld/g' ./feeds.conf.default	
+        rm -f ./feeds.conf.default        
+        echo 'src-git packages https://github.com/Lienol/openwrt-packages.git;22.03' >> ./feeds.conf.default
+        echo 'src-git luci https://github.com/Lienol/openwrt-luci.git;22.03' >> ./feeds.conf.default
+        echo 'src-git routing https://git.openwrt.org/feed/routing.git;openwrt-22.03' >> ./feeds.conf.default
+        echo 'src-git telephony https://github.com/huanghitoy/telephony.git;master' >> ./feeds.conf.default
+        echo 'src-git lienol https://github.com/Lienol/openwrt-package.git;main' >> ./feeds.conf.default
+        echo 'src-git other https://github.com/Lienol/openwrt-package.git;other' >> ./feeds.conf.default
+        echo 'src-git 3ginfo https://github.com/4IceG/luci-app-3ginfo-lite.git' >> ./feeds.conf.default
+        echo 'src-git passwall_packages https://github.com/huanghitoy/openwrt-passwall-packages.git;main' >> ./feeds.conf.default
+        echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main' >> ./feeds.conf.default
+        
+        #echo 'src-git small https://github.com/kenzok8/small.git;master' >> ./feeds.conf.default
+        #sed -i 's/feed\/telephony.git/huanghitoy\/telephony.git;master/g' ./feeds.conf.default
+        #sed -i 's/^#src-git helloworld/src-git helloworld/g' ./feeds.conf.default	
     - name: Update & Install feeds
       working-directory: ./openwrt
       run: |
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         ./scripts/feeds install -a
-    #- name: Import external feeds - passwall
-      #working-directory: ./openwrt
-      #run: |
-        #git clone https://github.com/xiaorouji/openwrt-passwall.git package/lienol
-        #git clone "your_github_link" package/"your_folder_name"
+    - name: Import external feeds - JerryKuKu Argon
+      working-directory: ./openwrt
+      run: |
+        git clone git clone https://github.com/jerrykuku/luci-theme-argon.git feeds/other
+                
+    - name: xiugai golang 1.22- kenzok
+      working-directory: ./openwrt
+      run: |
+        rm -rf feeds/packages/lang/golang        
+        git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
         
-    #- name: Import external feeds - JerryKuKu Argon
-      #working-directory: ./openwrt
-      #run: |
-        #git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon-jerrykuku
-
-    - name: Configuration Customization - Build_x86_64_huang
+    - name: Configuration Customization - r7800
       env:
-        CONFIG_FILE: 'x86_64_huang.config'
+        CONFIG_FILE: 'r7800.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x ./customize.sh && ./customize.sh
