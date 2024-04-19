@@ -112,7 +112,7 @@ jobs:
         CONFIG_FILE: 'r7800_1.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x ./customize.sh && ./customize.sh
+        #chmod +x ./customize.sh && ./customize.sh
         cd openwrt && make defconfig
         
     
@@ -127,7 +127,7 @@ jobs:
         CONFIG_FILE: 'r7800_2.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x ./customize.sh && ./customize.sh
+        #chmod +x ./customize.sh && ./customize.sh
         cd openwrt && make defconfig
         
        
@@ -142,7 +142,7 @@ jobs:
         CONFIG_FILE: 'r7800_3.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x ./customize.sh && ./customize.sh
+        #chmod +x ./customize.sh && ./customize.sh
         cd openwrt && make defconfig
         
     
@@ -158,7 +158,7 @@ jobs:
         CONFIG_FILE: 'r7800.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x ./customize.sh && ./customize.sh
+        #chmod +x ./customize.sh && ./customize.sh
         cd openwrt && make defconfig
         
     
