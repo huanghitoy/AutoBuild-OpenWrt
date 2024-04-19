@@ -78,7 +78,7 @@ jobs:
     - name: Import external feeds - JerryKuKu Argon
       working-directory: ./openwrt
       run: |
-        git clone git clone https://github.com/jerrykuku/luci-theme-argon.git feeds/other
+        git clone https://github.com/jerrykuku/luci-theme-argon.git feeds/other
                 
     - name: xiugai golang 1.22- kenzok
       working-directory: ./openwrt
