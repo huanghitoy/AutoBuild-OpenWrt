@@ -54,7 +54,9 @@ jobs:
         REPO_BRANCH: 22.03
       run: |
         git clone  -b $REPO_BRANCH --single-branch $REPO_URL openwrt
+        git clone https://github.com/huanghitoy/lede lede
         cd openwrt
+        cp -r ../lede/package/wwan ./package/
         rm -f ./feeds.conf.default        
         echo 'src-git packages https://github.com/Lienol/openwrt-packages.git;22.03' >> ./feeds.conf.default
         echo 'src-git luci https://github.com/Lienol/openwrt-luci.git;22.03' >> ./feeds.conf.default
