@@ -91,7 +91,7 @@ jobs:
         
     - name: Configuration Customization - r7800
       env:
-        CONFIG_FILE: 'r7800.config'
+        CONFIG_FILE: 'r7800_1.config'
       run: |
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x ./customize.sh && ./customize.sh
