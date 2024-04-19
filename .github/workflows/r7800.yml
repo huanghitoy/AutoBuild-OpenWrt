@@ -98,7 +98,7 @@ jobs:
         chmod +x ./customize.sh && ./customize.sh
         cd openwrt && make defconfig
         
-    - name: Download package  $CONFIG_FILE
+    - name: Download package  r7800.config
       working-directory: ./openwrt
       run: |
         make download -j$(nproc)
@@ -114,7 +114,7 @@ jobs:
         cd openwrt && make defconfig
         
     
-    - name: Build firmware  $CONFIG_FILE
+    - name: Build firmware  r7800_1.config
       working-directory: ./openwrt
       run: |
         echo -e "$(nproc) thread build."
@@ -129,7 +129,7 @@ jobs:
         cd openwrt && make defconfig
         
        
-    - name: Build firmware  $CONFIG_FILE
+    - name: Build firmware  r7800_2.config
       working-directory: ./openwrt
       run: |
         echo -e "$(nproc) thread build."
@@ -144,7 +144,7 @@ jobs:
         cd openwrt && make defconfig
         
     
-    - name: Build firmware  $CONFIG_FILE
+    - name: Build firmware  r7800_3.config
       working-directory: ./openwrt
       run: |
         echo -e "$(nproc) thread build."
@@ -160,7 +160,7 @@ jobs:
         cd openwrt && make defconfig
         
     
-    - name: Build firmware  $CONFIG_FILE
+    - name: Build firmware  r7800.config
       working-directory: ./openwrt
       run: |
         echo -e "$(nproc) thread build."
