@@ -1,0 +1,173 @@
+#=================================================
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: MIT
+# Author: eSirPlayground
+# Youtube Channel: https://goo.gl/fvkdwm 
+#=================================================
+
+name: r7800
+
+# Add a button to trigger the workflow
+on: 
+  repository_dispatch:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        set +e
+        docker rmi `docker images -q`
+        echo "Deleting files, please wait ..."
+        sudo rm -rf \
+          /usr/share/dotnet \
+          /etc/mysql \
+          /etc/php
+        sudo -E apt-get -y purge \
+          azure-cli \
+          ghc* \
+          zulu* \
+          hhvm \
+          llvm* \
+          firefox \
+          google* \
+          dotnet* \
+          powershell \
+          openjdk* \
+          mysql* \
+          php*
+        sudo -E apt-get update
+        sudo -E apt-get -y install ack antlr3 aria2 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pip libpython3-dev qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
+        sudo -E apt-get -y autoremove --purge
+        sudo -E apt-get clean
+    - name: Clone source code
+      env: 
+        REPO_URL: https://github.com/Lienol/openwrt
+        REPO_BRANCH: 22.03
+      run: |
+        git clone  -b $REPO_BRANCH --single-branch $REPO_URL openwrt
+        git clone https://github.com/huanghitoy/lede lede
+        cd openwrt
+        cp -r ../lede/package/wwan ./package/
+        rm -f ./feeds.conf.default        
+        echo 'src-git packages https://github.com/Lienol/openwrt-packages.git;22.03' >> ./feeds.conf.default
+        echo 'src-git luci https://github.com/Lienol/openwrt-luci.git;22.03' >> ./feeds.conf.default
+        echo 'src-git routing https://git.openwrt.org/feed/routing.git;openwrt-22.03' >> ./feeds.conf.default
+        echo 'src-git telephony https://github.com/huanghitoy/telephony.git;master' >> ./feeds.conf.default
+        echo 'src-git lienol https://github.com/Lienol/openwrt-package.git;main' >> ./feeds.conf.default
+        echo 'src-git other https://github.com/Lienol/openwrt-package.git;other' >> ./feeds.conf.default
+        echo 'src-git 3ginfo https://github.com/4IceG/luci-app-3ginfo-lite.git' >> ./feeds.conf.default
+        echo 'src-git passwall_packages https://github.com/huanghitoy/openwrt-passwall-packages.git;main' >> ./feeds.conf.default
+        echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main' >> ./feeds.conf.default
+        
+        #echo 'src-git small https://github.com/kenzok8/small.git;master' >> ./feeds.conf.default
+        #sed -i 's/feed\/telephony.git/huanghitoy\/telephony.git;master/g' ./feeds.conf.default
+        #sed -i 's/^#src-git helloworld/src-git helloworld/g' ./feeds.conf.default	
+    - name: Update & Install feeds
+      working-directory: ./openwrt
+      run: |
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+        ./scripts/feeds install -a
+    - name: Import external feeds - JerryKuKu Argon
+      working-directory: ./openwrt
+      run: |
+        git clone https://github.com/jerrykuku/luci-theme-argon.git feeds/other/luci-theme-argon
+                
+    - name: xiugai golang 1.22- kenzok
+      working-directory: ./openwrt
+      run: |
+        rm -rf feeds/packages/lang/golang        
+        git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+        make package/symlinks
+
+
+    - name: Configuration Customization r7800.config
+      env:
+        CONFIG_FILE: 'r7800.config'
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x ./customize.sh && ./customize.sh
+        cd openwrt && make defconfig
+        
+    - name: Download package  r7800.config
+      working-directory: ./openwrt
+      run: |
+        make download -j$(nproc)
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Configuration Customization - r7800_1
+      env:
+        CONFIG_FILE: 'r7800_1.config'
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x ./customize.sh && ./customize.sh
+        cd openwrt && make defconfig
+        
+    
+    - name: Build firmware  r7800_1.config
+      working-directory: ./openwrt
+      run: |
+        echo -e "$(nproc) thread build."
+        make -j$(nproc) V=s || make -j1 V=s
+        
+    - name: Configuration Customization - r7800_2
+      env:
+        CONFIG_FILE: 'r7800_2.config'
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x ./customize.sh && ./customize.sh
+        cd openwrt && make defconfig
+        
+       
+    - name: Build firmware  r7800_2.config
+      working-directory: ./openwrt
+      run: |
+        echo -e "$(nproc) thread build."
+        make -j$(nproc) V=s || make -j1 V=s
+
+    - name: Configuration Customization - r7800_3
+      env:
+        CONFIG_FILE: 'r7800_3.config'
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x ./customize.sh && ./customize.sh
+        cd openwrt && make defconfig
+        
+    
+    - name: Build firmware  r7800_3.config
+      working-directory: ./openwrt
+      run: |
+        echo -e "$(nproc) thread build."
+        make -j$(nproc) V=s || make -j1 V=s
+
+
+    - name: Configuration Customization - r7800
+      env:
+        CONFIG_FILE: 'r7800.config'
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x ./customize.sh && ./customize.sh
+        cd openwrt && make defconfig
+        
+    
+    - name: Build firmware  r7800.config
+      working-directory: ./openwrt
+      run: |
+        echo -e "$(nproc) thread build."
+        make -j$(nproc) V=s || make -j1 V=s
+        
+    - name : Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: OpenWrt
+        path: openwrt/bin
