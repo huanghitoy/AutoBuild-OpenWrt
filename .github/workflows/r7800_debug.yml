@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: r7800_排查问题
+name: r7800_debug
 
 # Add a button to trigger the workflow
 on: 
