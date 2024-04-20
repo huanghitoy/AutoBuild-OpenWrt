@@ -54,9 +54,7 @@ jobs:
         REPO_BRANCH: 22.03
       run: |
         git clone  -b $REPO_BRANCH --single-branch $REPO_URL openwrt
-        git clone https://github.com/huanghitoy/lede lede
         cd openwrt
-        cp -r ../lede/package/wwan ./package/
         rm -f ./feeds.conf.default        
         echo 'src-git packages https://github.com/Lienol/openwrt-packages.git;22.03' >> ./feeds.conf.default
         echo 'src-git luci https://github.com/Lienol/openwrt-luci.git;22.03' >> ./feeds.conf.default
@@ -86,13 +84,14 @@ jobs:
         git clone https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-    - name: xiugai golang 1.22- kenzok
+    - name: xiugai golang 1.22- kenzok && quectel-cm wwan
       working-directory: ./openwrt
       run: |
         rm -rf feeds/packages/lang/golang        
         git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+        git clone https://github.com/huanghitoy/wwan.git packages/wwan
         make package/symlinks
-
+    
 
     - name: Configuration Customization r7800.config
       env:
