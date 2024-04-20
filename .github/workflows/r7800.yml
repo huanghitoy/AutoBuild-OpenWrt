@@ -69,12 +69,10 @@ jobs:
         #echo 'src-git small https://github.com/kenzok8/small.git;master' >> ./feeds.conf.default
         #sed -i 's/feed\/telephony.git/huanghitoy\/telephony.git;master/g' ./feeds.conf.default
         #sed -i 's/^#src-git helloworld/src-git helloworld/g' ./feeds.conf.default	
-    - name: Update feeds && rm passwall_package
+    - name: Update feeds && rm packages/net/{xray-*,trojan*,v2ray-*,sing*}
       working-directory: ./openwrt
       run: |
         ./scripts/feeds update -a
-        #rm -rf feeds/luci/applications/luci-app-mosdns
-        #rm -rf feeds/packages/net/{alist,adguardhome,mosdns,xray-*,v2ray-*,sing*,smartdns}
         rm -rf feeds/packages/net/{xray-*,trojan*,v2ray-*,sing*}
                 
     - name: Import external feeds - JerryKuKu Argon
