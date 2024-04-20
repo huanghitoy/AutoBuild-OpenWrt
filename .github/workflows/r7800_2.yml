@@ -71,19 +71,21 @@ jobs:
         #echo 'src-git small https://github.com/kenzok8/small.git;master' >> ./feeds.conf.default
         #sed -i 's/feed\/telephony.git/huanghitoy\/telephony.git;master/g' ./feeds.conf.default
         #sed -i 's/^#src-git helloworld/src-git helloworld/g' ./feeds.conf.default	
-    - name: Update & Install feeds
+    - name: Update feeds && rm passwall_package
       working-directory: ./openwrt
       run: |
         ./scripts/feeds update -a
-        rm -rf feeds/luci/applications/luci-app-mosdns
-        rm -rf feeds/packages/net/{alist,adguardhome,mosdns,xray*,v2ray*,v2ray*,sing*,smartdns}
-        ./scripts/feeds install -a
-        ./scripts/feeds install -a
+        #rm -rf feeds/luci/applications/luci-app-mosdns
+        #rm -rf feeds/packages/net/{alist,adguardhome,mosdns,xray-*,v2ray-*,sing*,smartdns}
+        rm -rf feeds/packages/net/{xray-*,trojan*,v2ray-*,sing*}
+                
     - name: Import external feeds - JerryKuKu Argon
       working-directory: ./openwrt
       run: |
-        git clone https://github.com/jerrykuku/luci-theme-argon.git feeds/other/luci-theme-argon
-                
+        rm -rf feeds/luci/themes/luci-theme-argon
+        git clone https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
     - name: xiugai golang 1.22- kenzok
       working-directory: ./openwrt
       run: |
