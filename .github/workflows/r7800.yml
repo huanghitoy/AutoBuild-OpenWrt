@@ -87,7 +87,7 @@ jobs:
       run: |
         rm -rf feeds/packages/lang/golang        
         git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
-        git clone https://github.com/huanghitoy/wwan.git packages/wwan
+        git clone https://github.com/huanghitoy/wwan.git package/wwan
         make package/symlinks
     
 
