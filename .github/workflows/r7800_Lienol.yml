@@ -106,66 +106,11 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         
-    - name: Configuration Customization - r7800_1
-      env:
-        CONFIG_FILE: 'r7800_1.config'
-      run: |
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        #chmod +x ./customize.sh && ./customize.sh
-        cd openwrt && make defconfig
-        
-    
-    - name: Build firmware  r7800_1.config
-      working-directory: ./openwrt
-      run: |
-        echo -e "$(nproc) thread build."
-        make -j$(nproc) V=s || make -j1 V=s
-        
-    - name: Configuration Customization - r7800_2
-      env:
-        CONFIG_FILE: 'r7800_2.config'
-      run: |
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        #chmod +x ./customize.sh && ./customize.sh
-        cd openwrt && make defconfig
-        
-       
-    - name: Build firmware  r7800_2.config
-      working-directory: ./openwrt
-      run: |
-        echo -e "$(nproc) thread build."
-        make -j$(nproc) V=s || make -j1 V=s
-
-    - name: Configuration Customization - r7800_3
-      env:
-        CONFIG_FILE: 'r7800_3.config'
-      run: |
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        #chmod +x ./customize.sh && ./customize.sh
-        cd openwrt && make defconfig
-        
-    
-    - name: Build firmware  r7800_3.config
-      working-directory: ./openwrt
-      run: |
-        echo -e "$(nproc) thread build."
-        make -j$(nproc) V=s || make -j1 V=s
-
-
-    - name: Configuration Customization - r7800
-      env:
-        CONFIG_FILE: 'r7800.config'
-      run: |
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        #chmod +x ./customize.sh && ./customize.sh
-        cd openwrt && make defconfig
-        
-    
     - name: Build firmware  r7800.config
       working-directory: ./openwrt
       run: |
         echo -e "$(nproc) thread build."
-        make -j$(nproc) V=s || make -j1 V=s
+        make -j$(nproc) V=s 
         
     - name : Upload artifact
       uses: actions/upload-artifact@master
