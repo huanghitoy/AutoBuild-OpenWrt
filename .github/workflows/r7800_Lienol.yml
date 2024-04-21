@@ -70,13 +70,14 @@ jobs:
         #sed -i 's/feed\/telephony.git/huanghitoy\/telephony.git;master/g' ./feeds.conf.default
         #sed -i 's/^#src-git helloworld/src-git helloworld/g' ./feeds.conf.default	
     
-    - name: Update feeds && rm Import external feeds - mosdos  alist  wwan
+    - name: Update feeds && rm Import external feeds - mosdos  alist qBittorrent  wwan 
       working-directory: ./openwrt
       run: |
         ./scripts/feeds update -a
         rm -rf feeds/packages/net/{xray-*,trojan*,v2ray-*,sing*}
         git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
         git clone https://github.com/sbwml/luci-app-alist package/alist
+        git clone https://github.com/sbwml/openwrt-qBittorrent package/qBittorrent
         git clone https://github.com/huanghitoy/wwan.git package/wwan
                 
     - name: Import external feeds - JerryKuKu Argon
