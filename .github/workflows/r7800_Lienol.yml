@@ -69,11 +69,15 @@ jobs:
         #echo 'src-git small https://github.com/kenzok8/small.git;master' >> ./feeds.conf.default
         #sed -i 's/feed\/telephony.git/huanghitoy\/telephony.git;master/g' ./feeds.conf.default
         #sed -i 's/^#src-git helloworld/src-git helloworld/g' ./feeds.conf.default	
-    - name: Update feeds && rm packages/net/{xray-*,trojan*,v2ray-*,sing*}
+    
+    - name: Update feeds && rm Import external feeds - mosdos  alist  wwan
       working-directory: ./openwrt
       run: |
         ./scripts/feeds update -a
         rm -rf feeds/packages/net/{xray-*,trojan*,v2ray-*,sing*}
+        git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+        git clone https://github.com/sbwml/luci-app-alist package/alist
+        git clone https://github.com/huanghitoy/wwan.git package/wwan
                 
     - name: Import external feeds - JerryKuKu Argon
       working-directory: ./openwrt
@@ -82,14 +86,13 @@ jobs:
         git clone https://github.com/jerrykuku/luci-theme-argon.git feeds/luci/themes/luci-theme-argon
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-    - name: xiugai golang 1.22- kenzok && quectel-cm wwan
+        
+    - name: update golang 1.22- kenzok 
       working-directory: ./openwrt
       run: |
         rm -rf feeds/packages/lang/golang        
         git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
-        git clone https://github.com/huanghitoy/wwan.git package/wwan
-        make package/symlinks
-    
+        make package/symlinks    
 
     - name: Configuration Customization r7800.config
       env:
