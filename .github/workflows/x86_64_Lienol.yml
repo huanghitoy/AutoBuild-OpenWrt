@@ -88,11 +88,11 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         
-    - name: update golang 1.22- kenzok 
+    - name: update golang 1.22
       working-directory: ./openwrt
       run: |
         rm -rf feeds/packages/lang/golang        
-        git clone https://github.com/kenzok8/golang feeds/packages/lang/golang
+        git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
         make package/symlinks    
 
     - name: Configuration Customization x86_64_Lienol.config
